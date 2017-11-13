@@ -1,0 +1,8 @@
+Note
+*Press R to toggle on and off reprojection
+*The mirror surface shows how to disable reprojecton on certain materials/shaders
+*For profiling the GPU cost, Graphics.PresentAndSync part should be removed from the total cost, which was filled in to cap the FPS = 90 
+
+Known Issues
+
+* There is mysterious shader compiling error on DirectX 9, we removed DX 9 from the API list
