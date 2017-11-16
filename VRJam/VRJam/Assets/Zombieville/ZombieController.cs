@@ -59,8 +59,9 @@ public class ZombieController : MonoBehaviour {
             }
             
             Vector3 plyrDirection = player.position - transform.position;
-            plyrDirection.y = transform.position.y;
+            //plyrDirection.y = transform.position.y;
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(plyrDirection, Vector3.up), Time.deltaTime);
+            transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
         }
         else
         {
