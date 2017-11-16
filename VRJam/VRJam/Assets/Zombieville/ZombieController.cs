@@ -27,11 +27,26 @@ public class ZombieController : MonoBehaviour {
     
     public bool playerInRange = false;
     bool attacking = false;
+    public AudioSource killSound;
     
     void Start () {
         anim = GetComponent<Animator>();
         ctrl = GetComponent<CharacterController>();
         zombieCount++;
+        processChildrenCollisions(transform);
+    }
+    
+    void processChildrenCollisions(Transform t)
+    {
+        foreach (Transform child in t)
+        {
+            ZombiePart part = child.GetComponent<ZombiePart>();
+            if (part != null)
+            {
+                Physics.IgnoreCollision(ctrl, part.GetComponent<Collider>(), true);
+            }
+            processChildrenCollisions(child);
+        }
     }
     
     void Update () {
@@ -59,9 +74,8 @@ public class ZombieController : MonoBehaviour {
             }
             
             Vector3 plyrDirection = player.position - transform.position;
-            //plyrDirection.y = transform.position.y;
+            plyrDirection.y = transform.position.y;
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(plyrDirection, Vector3.up), Time.deltaTime);
-            transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
         }
         else
         {
@@ -110,6 +124,7 @@ public class ZombieController : MonoBehaviour {
         dead = true;
         ctrl.enabled = false;
         StartCoroutine(depop());
+        killSound.Play();
     }
     
     IEnumerator depop()

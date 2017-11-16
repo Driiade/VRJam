@@ -8,6 +8,10 @@ public class NodingAcceleration : MonoBehaviour {
     public float maxMovementVelocity = .3f;
     public Transform cameraTransform;
     public bool useMouseMovement = true;
+    public Transform katanaOrientation;
+    public Transform katana;
+    public float katanaWhenRotationVelocAbove = 20;
+    public Animator katanaAnim;
     
     [Range(0, .6f)]
     public float minAccelerationToMove = .3f;
@@ -25,10 +29,11 @@ public class NodingAcceleration : MonoBehaviour {
     float mouseMvtRotY = 0;
     bool lockInput;
     float lastX = 0;
+    float lastY = 0;
     
     void Start () {
         ctrl = GetComponent<CharacterController>();
-        SetCursorLock(true);
+        SetCursorLock(useMouseMovement);
     }
     
     void SetCursorLock(bool lockCursor)
@@ -74,6 +79,19 @@ public class NodingAcceleration : MonoBehaviour {
             SetCursorLock(true);
         
         lastX = cameraTransform.eulerAngles.x;
+        
+        float oldRot = katanaOrientation.eulerAngles.y;
+        katanaOrientation.rotation = Quaternion.Lerp(katanaOrientation.rotation, Quaternion.LookRotation(direction, Vector3.up), Time.deltaTime*10);
+        
+        if (Mathf.Abs(cameraTransform.eulerAngles.y - lastY) * Time.deltaTime > katanaWhenRotationVelocAbove)
+            cutWithKatana();
+        
+        lastY = cameraTransform.eulerAngles.y;
+    }
+    
+    void cutWithKatana()
+    {
+        katanaAnim.SetTrigger("cut");
     }
     
     public void kill()
