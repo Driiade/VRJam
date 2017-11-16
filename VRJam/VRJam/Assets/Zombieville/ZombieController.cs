@@ -28,10 +28,12 @@ public class ZombieController : MonoBehaviour {
     public bool playerInRange = false;
     bool attacking = false;
     public AudioSource killSound;
+    NodingAcceleration playerCtrl;
     
     void Start () {
         anim = GetComponent<Animator>();
         ctrl = GetComponent<CharacterController>();
+        playerCtrl = player.GetComponent<NodingAcceleration>();
         zombieCount++;
         processChildrenCollisions(transform);
     }
@@ -99,6 +101,7 @@ public class ZombieController : MonoBehaviour {
         if (attacking && playerInRange)
         {
             anim.SetTrigger("attack");
+            playerCtrl.damage(10);
             StartCoroutine(reenableAttackCo());
         }
         

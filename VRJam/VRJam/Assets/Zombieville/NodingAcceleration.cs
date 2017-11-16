@@ -25,15 +25,25 @@ public class NodingAcceleration : MonoBehaviour {
     public float curVelocity;
     public float curVerticalVelocity;
     
+    public float hpGainPerSecond = 5;
+    
+    public BloodRainCameraController bloodCtrl;
+    
     float mouseMvtRotX = 0;
+    Camera cam;
     float mouseMvtRotY = 0;
     bool lockInput;
     float lastX = 0;
     float lastY = 0;
+    Vector3 spawnPoint;
+    bool dead = false;
     
     void Start () {
         ctrl = GetComponent<CharacterController>();
+        spawnPoint = ctrl.transform.position;
+        cam = cameraTransform.GetComponent<Camera>();
         SetCursorLock(useMouseMovement);
+        StartCoroutine(regainHp());
     }
     
     void SetCursorLock(bool lockCursor)
@@ -55,6 +65,9 @@ public class NodingAcceleration : MonoBehaviour {
     void Update () {
         if (useMouseMovement && lockInput)
             mouseHack();
+        
+        if (dead)
+            return;
         
         Vector3 direction = cameraTransform.forward;
         direction.y = 0;
@@ -96,7 +109,40 @@ public class NodingAcceleration : MonoBehaviour {
     
     public void kill()
     {
+        if (dead)
+            return;
         print("KILL");
+        dead = true;
+        // cam.enabled = false;
+        StartCoroutine(respawn());
+    }
+    
+    public void damage(int hp)
+    {
+        if (dead)
+            return;
+        bloodCtrl.HP -= hp;
+        if (bloodCtrl.HP <= 0)
+            kill();
+    }
+    
+    IEnumerator regainHp()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1);
+            bloodCtrl.HP = (int)Mathf.Min(100, bloodCtrl.HP+hpGainPerSecond);
+        }
+    }
+    
+    IEnumerator respawn()
+    {
+        yield return new WaitForSeconds(5);
+        ctrl.transform.position = spawnPoint;
+        curVerticalVelocity = curVelocity = 0;
+        dead = false;
+        bloodCtrl.HP = 100;
+        // cam.enabled = true;
     }
     
     void mouseHack()
