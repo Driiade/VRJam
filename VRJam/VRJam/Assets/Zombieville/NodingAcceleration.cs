@@ -30,7 +30,10 @@ public class NodingAcceleration : MonoBehaviour {
     public BloodRainCameraController bloodCtrl;
     
     public AudioSource[] katanaSwingSounds;
-    
+
+    public AudioSource deathScream;
+    public AudioSource breath;
+
     float mouseMvtRotX = 0;
     Camera cam;
     float mouseMvtRotY = 0;
@@ -117,6 +120,10 @@ public class NodingAcceleration : MonoBehaviour {
         print("KILL");
         dead = true;
         // cam.enabled = false;
+
+        deathScream.Play();
+        breath.Stop();
+
         StartCoroutine(respawn());
     }
     
@@ -145,6 +152,7 @@ public class NodingAcceleration : MonoBehaviour {
         curVerticalVelocity = curVelocity = 0;
         dead = false;
         bloodCtrl.HP = 100;
+        breath.Play();
         // cam.enabled = true;
     }
     
