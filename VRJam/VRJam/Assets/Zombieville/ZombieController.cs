@@ -27,7 +27,7 @@ public class ZombieController : MonoBehaviour {
     
     public bool playerInRange = false;
     bool attacking = false;
-    public AudioSource killSound;
+    public AudioSource[] killSounds;
     NodingAcceleration playerCtrl;
     
     void Start () {
@@ -128,7 +128,11 @@ public class ZombieController : MonoBehaviour {
         dead = true;
         ctrl.enabled = false;
         StartCoroutine(depop());
-        killSound.Play();
+    }
+    
+    public void playSlashSound()
+    {
+        killSounds[(int)(Random.value * killSounds.Length)].Play();
     }
     
     IEnumerator depop()
