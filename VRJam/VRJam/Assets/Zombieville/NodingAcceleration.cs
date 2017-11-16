@@ -29,6 +29,8 @@ public class NodingAcceleration : MonoBehaviour {
     
     public BloodRainCameraController bloodCtrl;
     
+    public AudioSource[] katanaSwingSounds;
+    
     float mouseMvtRotX = 0;
     Camera cam;
     float mouseMvtRotY = 0;
@@ -105,6 +107,7 @@ public class NodingAcceleration : MonoBehaviour {
     void cutWithKatana()
     {
         katanaAnim.SetTrigger("cut");
+        katanaSwingSounds[(int)(Random.value * katanaSwingSounds.Length)].Play();
     }
     
     public void kill()
