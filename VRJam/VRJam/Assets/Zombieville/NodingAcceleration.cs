@@ -33,6 +33,8 @@ public class NodingAcceleration : MonoBehaviour {
 
     public AudioSource deathScream;
     public AudioSource breath;
+    
+    public GameObject fade2Black;
 
     float mouseMvtRotX = 0;
     Camera cam;
@@ -47,6 +49,7 @@ public class NodingAcceleration : MonoBehaviour {
         ctrl = GetComponent<CharacterController>();
         spawnPoint = ctrl.transform.position;
         cam = cameraTransform.GetComponent<Camera>();
+        fade2Black.SetActive(false);
         SetCursorLock(useMouseMovement);
         StartCoroutine(regainHp());
     }
@@ -123,6 +126,7 @@ public class NodingAcceleration : MonoBehaviour {
 
         deathScream.Play();
         breath.Stop();
+        fade2Black.SetActive(true);
 
         StartCoroutine(respawn());
     }
@@ -151,6 +155,7 @@ public class NodingAcceleration : MonoBehaviour {
         ctrl.transform.position = spawnPoint;
         curVerticalVelocity = curVelocity = 0;
         dead = false;
+        fade2Black.SetActive(false);
         bloodCtrl.HP = 100;
         breath.Play();
         // cam.enabled = true;
